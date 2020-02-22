@@ -39,6 +39,7 @@ class WeatherTableVC: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.swedishCities = self.swedishCities.sorted{$0 < $1}
+        
         self.registerCustomTableViewCell()
         searchBar.delegate = self
     }
@@ -48,6 +49,7 @@ class WeatherTableVC: UITableViewController {
             return searchResult.count
         } else {
             return swedishCities.count
+            //return self.cityAndTemp.count
         }
         //sektioner
     }
@@ -61,7 +63,6 @@ class WeatherTableVC: UITableViewController {
         
         if let cell = tableView.dequeueReusableCell(withIdentifier: "customWeatherCell") as? customWeatherCell{
             if searching{
-                cell.cityName.text = searchResult[indexPath.row]
                 weatherApi.getWeather(city: searchResult[indexPath.row])
                 {
                     (result) in

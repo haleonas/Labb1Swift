@@ -14,7 +14,7 @@ struct CityData
     var temp_max:Double = 0.0
     var temp_min:Double = 0.0
     var temp:Double = 0.0
-    var wind:Int = 0
+    var wind:Int
     var speed: Double = 0.0
     var feelsLike: Double = 0.0
     
@@ -23,7 +23,7 @@ struct CityData
         self.temp_min = tempData["temp_min"].double!.Celsius
         self.temp = tempData["temp_max"].double!.Celsius
         self.feelsLike = tempData["feels_like"].double!.Celsius
-        self.wind = windData["deg"].int!
+        self.wind = windData["deg"].int ?? 0
         self.speed = windData["speed"].double!
     }
 }
