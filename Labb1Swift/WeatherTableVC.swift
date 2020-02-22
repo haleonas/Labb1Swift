@@ -68,7 +68,7 @@ class WeatherTableVC: UITableViewController {
                     switch result
                     {
                     case .success(let cityData):
-                        cell.temp.text = "\(cityData.temp.truncate(places: 2))"
+                        cell.temp.text = "\(cityData.temp.truncate(places: 2))°C"
                     case .failure(let error):
                         print(error)
                     }
@@ -82,7 +82,7 @@ class WeatherTableVC: UITableViewController {
                     switch result
                     {
                     case .success(let cityData):
-                        cell.temp.text = "\(cityData.temp.truncate(places: 2))"
+                        cell.temp.text = "\(cityData.temp.truncate(places: 2))°C"
                     case .failure(let error):
                         print(error)
                     }

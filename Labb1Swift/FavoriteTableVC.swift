@@ -37,8 +37,19 @@ class FavoriteTableVC: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customWeatherCell", for: indexPath)
 
         if let cell = tableView.dequeueReusableCell(withIdentifier: "customWeatherCell") as? customWeatherCell {
-            
+        let weatherApi = cityWeather()
             cell.cityName.text = self.favoriteCities[indexPath.row]
+            weatherApi.getWeather(city: self.favoriteCities[indexPath.row])
+            {
+                (result) in
+                switch result
+                {
+                case .success(let cityData):
+                    cell.temp.text = "\(cityData.temp.truncate(places: 2))°C"
+                case .failure(let error):
+                    print(error)
+                }
+            }
 
             return cell
         }
