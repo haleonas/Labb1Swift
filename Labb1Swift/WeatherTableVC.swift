@@ -57,12 +57,36 @@ class WeatherTableVC: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customWeatherCell", for: indexPath)
+        let weatherApi = cityWeather()
         
         if let cell = tableView.dequeueReusableCell(withIdentifier: "customWeatherCell") as? customWeatherCell{
             if searching{
-                 cell.cityName.text = searchResult[indexPath.row]
+                cell.cityName.text = searchResult[indexPath.row]
+                weatherApi.getWeather(city: searchResult[indexPath.row])
+                {
+                    (result) in
+                    switch result
+                    {
+                    case .success(let cityData):
+                        cell.temp.text = "\(cityData.temp.truncate(places: 2))"
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
+               
             } else {
                 cell.cityName.text = swedishCities[indexPath.row]
+                weatherApi.getWeather(city: swedishCities[indexPath.row])
+                {
+                    (result) in
+                    switch result
+                    {
+                    case .success(let cityData):
+                        cell.temp.text = "\(cityData.temp.truncate(places: 2))"
+                    case .failure(let error):
+                        print(error)
+                    }
+                }
 
             }
             return cell
