@@ -8,7 +8,25 @@
 
 import UIKit
 
-class WeatherTableVC: UITableViewController,UISearchBarDelegate {
+extension WeatherTableVC: UISearchBarDelegate{
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        //print(searchText)
+
+        searchResult = swedishCities.filter({$0.prefix(searchText.count) == searchText})
+        
+        searching = true
+        
+        self.tableView.reloadData()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar){
+        searching = false
+        searchBar.text = ""
+        self.tableView.reloadData()
+    }
+}
+
+class WeatherTableVC: UITableViewController {
     @IBOutlet weak var searchBar: UISearchBar!
     
     
@@ -18,34 +36,15 @@ class WeatherTableVC: UITableViewController,UISearchBarDelegate {
     var searchResult = [String]()
     var searching = false
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
-
-        searchResult = swedishCities.filter({$0.prefix(searchText.count) == searchText})
-        
-        searching = true
-        
-        self.tableView.reloadData()
-    }
-    
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar)
-    {
-        searching = false
-        searchBar.text = ""
-        self.tableView.reloadData()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.swedishCities = self.swedishCities.sorted{$0 < $1}
         self.registerCustomTableViewCell()
         searchBar.delegate = self
     }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
-    {
-        if searching
-        {
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+        if searching{
             return searchResult.count
         } else {
             return swedishCities.count
@@ -59,13 +58,10 @@ class WeatherTableVC: UITableViewController,UISearchBarDelegate {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customWeatherCell", for: indexPath)
         
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "customWeatherCell") as? customWeatherCell
-        {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "customWeatherCell") as? customWeatherCell{
             if searching{
                  cell.cityName.text = searchResult[indexPath.row]
-            }
-            else
-            {
+            } else {
                 cell.cityName.text = swedishCities[indexPath.row]
 
             }
@@ -75,13 +71,11 @@ class WeatherTableVC: UITableViewController,UISearchBarDelegate {
         return cell
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
-    {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         self.performSegue(withIdentifier: "showCityDetailsSegue", sender: self)
     }
     
-    func registerCustomTableViewCell()
-    {
+    func registerCustomTableViewCell(){
         let textFieldCell = UINib(nibName: "customWeatherCell", bundle:nil)
         self.tableView.register(textFieldCell, forCellReuseIdentifier:"customWeatherCell")
     }
@@ -95,13 +89,10 @@ class WeatherTableVC: UITableViewController,UISearchBarDelegate {
                 let detailVC = segue.destination as! ShowCityWeatherVC
                 if searching{
                     detailVC.city = self.searchResult[selectedRow]
-                }
-                else
-                {
+                } else {
                     detailVC.city = self.swedishCities[selectedRow]
                 }
             }
         }
     }
 }
-

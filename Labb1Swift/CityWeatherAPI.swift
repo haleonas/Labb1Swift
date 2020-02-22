@@ -17,30 +17,20 @@ struct cityWeather
     
     func getWeather(city:String, completion:@escaping(Result<CityData, Error>) -> Void)
     {
-        print(city)
-        var tempCity = city
-        
-        tempCity = tempCity.replacingOccurrences(of: "å", with: "a")
-        tempCity = tempCity.replacingOccurrences(of: "Å", with: "A")
-        tempCity = tempCity.replacingOccurrences(of: "ä", with: "ae")
-        tempCity = tempCity.replacingOccurrences(of: "Ä", with: "Ae")
-        tempCity = tempCity.replacingOccurrences(of: "ö", with: "oe")
-        tempCity = tempCity.replacingOccurrences(of: "Ö", with: "Oe")
-        
-        print(tempCity)
-        
-        let url = urlBase + tempCity + apiKey
+        //print(city)
+    
+        let temp = city.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? ""
+ 
+        let url = urlBase + temp + apiKey
         
         AF.request(url, method: .get).validate().responseJSON { response in
             switch response.result {
             case .success(let value):
                 let json = JSON(value)
-                print("JSON: \(json)")
+                //print("JSON: \(json)")
             
-                
                 let cityData:CityData = CityData.init(tempData: json["main"], windData: json["wind"])
                 completion(.success(cityData))
-                print(json["sys"]["sunset"])
 
             case .failure(let error):
                 print(error)

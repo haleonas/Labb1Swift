@@ -26,8 +26,7 @@ class FavoriteTableVC: UITableViewController {
         return self.favoriteCities.count
     }
 
-    func getFavorites() -> [String]
-       {
+    func getFavorites() -> [String]{
            let defaults = UserDefaults.standard
            let favoriteCities  = defaults.object(forKey:"favoriteCities") as? [String] ?? [String]()
            
@@ -37,8 +36,7 @@ class FavoriteTableVC: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "customWeatherCell", for: indexPath)
 
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "customWeatherCell") as? customWeatherCell
-        {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "customWeatherCell") as? customWeatherCell {
             
             cell.cityName.text = self.favoriteCities[indexPath.row]
 
@@ -48,14 +46,12 @@ class FavoriteTableVC: UITableViewController {
         return cell
     }
     
-    func registerCustomTableViewCell()
-       {
-           let textFieldCell = UINib(nibName: "customWeatherCell", bundle:nil)
-           self.tableView.register(textFieldCell, forCellReuseIdentifier:"customWeatherCell")
-       }
+    func registerCustomTableViewCell(){
+        let textFieldCell = UINib(nibName: "customWeatherCell", bundle:nil)
+        self.tableView.register(textFieldCell, forCellReuseIdentifier:"customWeatherCell")
+    }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
-    {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
         self.performSegue(withIdentifier: "showCityDetailsSegue", sender: self)
     }
 

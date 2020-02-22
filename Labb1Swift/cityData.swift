@@ -18,14 +18,12 @@ struct CityData
     var speed: Double = 0.0
     var feelsLike: Double = 0.0
     
-    init(tempData: JSON,windData:JSON)
-    {
+    init(tempData: JSON,windData:JSON){
         self.temp_max = tempData["temp_max"].double!.Celsius
         self.temp_min = tempData["temp_min"].double!.Celsius
         self.temp = tempData["temp_max"].double!.Celsius
         self.feelsLike = tempData["feels_like"].double!.Celsius
         self.wind = windData["deg"].int!
         self.speed = windData["speed"].double!
-        
     }
 }

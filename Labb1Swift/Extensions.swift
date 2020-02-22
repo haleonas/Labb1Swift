@@ -10,8 +10,7 @@ import Foundation
 
 extension Double {
     var Celsius: Double {return self - 273.15}
-    func truncate(places : Int)-> Double
-       {
-           return Double(floor(pow(10.0, Double(places)) * self)/pow(10.0, Double(places)))
-       }
+    func truncate(places : Int)-> Double{
+        return Double(floor(pow(10.0, Double(places)) * self)/pow(10.0, Double(places)))
+    }
 }

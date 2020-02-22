@@ -8,5 +8,6 @@ target 'Labb1Swift' do
   # Pods for Labb1Swift
 	    pod 'SwiftyJSON', '~> 4.0'
 	    pod 'Alamofire', '~> 5.0.0-rc.3'
+	    pod 'Charts'
 
 end

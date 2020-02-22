@@ -16,6 +16,7 @@ class ShowCityWeatherVC: UIViewController {
     @IBOutlet weak var tempMax: UILabel!
     @IBOutlet weak var temp: UILabel!
     @IBOutlet weak var feelsLikeLabel: UILabel!
+    @IBOutlet weak var clothingImage: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,8 +24,7 @@ class ShowCityWeatherVC: UIViewController {
         setupApiData()
     }
     
-    func setup()
-    {
+    func setup(){
         cityLabel.text = city
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self,action: #selector(imageTapped(tapGestureRecognizer:)))
@@ -32,23 +32,18 @@ class ShowCityWeatherVC: UIViewController {
         self.favoriteImageView.addGestureRecognizer(tapGestureRecognizer)
         
         let favoriteCities = self.getFavorites()
-        for city in favoriteCities
-        {
-            if(city == self.city)
-            {
+        for city in favoriteCities {
+            if(city == self.city){
                 self.favoriteImageView.image = UIImage(systemName: "star.fill")
             }
         }
     }
     
-    func setupApiData()
-    {
+    func setupApiData(){
         let cityApi: cityWeather = cityWeather()
-        cityApi.getWeather(city: self.city)
-        {
+        cityApi.getWeather(city: self.city){
             (result) in
-            switch result
-            {
+            switch result{
             case .success(let cityData):
                 print(cityData)
                 
@@ -57,40 +52,52 @@ class ShowCityWeatherVC: UIViewController {
                 self.temp.text = "\(self.temp.text!)\(cityData.temp.truncate(places: 1))°C"
                 self.feelsLikeLabel.text = "\(self.feelsLikeLabel.text!)\(cityData.feelsLike.truncate(places: 1))°C"
                 
+                self.suggestClothing(temp: cityData.temp, feelsLike: cityData.feelsLike)
+                
             case .failure(let error):
                 print(error)
             }
         }
     }
+    func suggestClothing(temp: Double,feelsLike: Double){
+        let clothing = [#imageLiteral(resourceName: "Summer_clothing"),#imageLiteral(resourceName: "Spring_clothing"),#imageLiteral(resourceName: "Winter_Clothing ")] //sommar , vår/höst, vinter
+        let averageTemp = (temp + feelsLike) / 2
+        
+        if(averageTemp <= 5){
+            self.clothingImage.image = clothing[2]
+            //föreslå varmare kläder
+        }else if(averageTemp >= 6 && averageTemp <= 20){
+             self.clothingImage.image = clothing[1]
+            //föreslå kläder för lite varmare väder
+        }else{
+             self.clothingImage.image = clothing[0]
+            //föreslå sommar kläder
+        }
+        
+    }
     @IBOutlet weak var favoriteImageView: UIImageView!
     
-    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer)
-    {
+    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer){
         let tappedImage = tapGestureRecognizer.view as! UIImageView
         
         var favoriteCities = self.getFavorites()
         
-        if !favoriteCities.contains(self.city)
-        {
+        if !favoriteCities.contains(self.city){
             favoriteCities.append(self.city)
             tappedImage.image = UIImage(systemName: "star.fill")
-        }
-        else if favoriteCities.contains(self.city)
-        {
+        }else if favoriteCities.contains(self.city){
             favoriteCities.remove(at: favoriteCities.firstIndex(of: self.city)!)
            tappedImage.image = UIImage(systemName: "star")
         }
         saveFavorite(cities: favoriteCities)
     }
     
-    func saveFavorite(cities:[String])
-    {
+    func saveFavorite(cities:[String]){
         let defaults = UserDefaults.standard
         defaults.set(cities, forKey: "favoriteCities")
-        
     }
-    func getFavorites() -> [String]
-    {
+    
+    func getFavorites() -> [String]{
         let defaults = UserDefaults.standard
         let favoriteCities  = defaults.object(forKey:"favoriteCities") as? [String] ?? [String]()
         
